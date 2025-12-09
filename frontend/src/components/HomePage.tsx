@@ -292,11 +292,11 @@ export const HomePage = memo(function HomePage({ onShopNow, onCategoryClick }: H
             <div className="relative aspect-[3/2] overflow-hidden group cursor-pointer">
               <ImageWithFallback
                 src="https://images.unsplash.com/photo-1698678961439-413200c7ca9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxydW5uaW5nJTIwYXRobGV0ZSUyMHN0YWRpdW18ZW58MXx8fHwxNzY1MTI3ODYwfDA&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Structure 26"
+                alt="Giày Chạy Bộ Chuyên Nghiệp"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute bottom-6 left-6 text-white">
-                <h4 className="text-xl mb-3 font-bold">Structure 26</h4>
+                <h4 className="text-xl mb-3 font-bold">Giày Chạy Bộ Chuyên Nghiệp</h4>
                 <button className="px-6 py-2 bg-white text-black rounded-full text-sm hover:bg-gray-100 transition-colors font-medium">
                   Mua Ngay
                 </button>
