@@ -10,8 +10,8 @@ interface HeaderProps {
 
 type MenuKey = 'featured' | 'men' | 'women' | 'kids' | 'sale';
 
-// Custom hook để handle scroll WITHOUT re-render - ẨN HOÀN TOÀN taskbar
-function useScrollAnimation(utilityBarRef: React.RefObject<HTMLDivElement>) {
+// Custom hook để handle scroll - Dùng transform KHÔNG giật
+function useScrollAnimation(utilityBarRef: React.RefObject<HTMLDivElement>, headerRef: React.RefObject<HTMLElement>) {
   const rafRef = useRef<number | null>(null);
   const isHidden = useRef(false);
 
@@ -23,22 +23,23 @@ function useScrollAnimation(utilityBarRef: React.RefObject<HTMLDivElement>) {
         const scrollY = window.scrollY;
         const shouldHide = scrollY > 10;
 
-        // Chỉ update DOM nếu state thực sự thay đổi
+        // Chỉ update khi state thay đổi
         if (shouldHide !== isHidden.current) {
           isHidden.current = shouldHide;
           
-          if (utilityBarRef.current) {
-            // Update DOM trực tiếp, KHÔNG trigger re-render
+          if (utilityBarRef.current && headerRef.current) {
             if (shouldHide) {
-              // ẨN HOÀN TOÀN - không chừa khoảng trắng
-              utilityBarRef.current.style.maxHeight = '0';
+              // ẨN: Dùng transform + margin âm để header trồi lên
+              utilityBarRef.current.style.transform = 'translateY(-100%)';
               utilityBarRef.current.style.opacity = '0';
-              utilityBarRef.current.style.overflow = 'hidden';
+              utilityBarRef.current.style.pointerEvents = 'none';
+              headerRef.current.style.marginTop = '-40px';
             } else {
-              // HIỆN LẠI
-              utilityBarRef.current.style.maxHeight = '40px';
+              // HIỆN: Reset về vị trí ban đầu
+              utilityBarRef.current.style.transform = 'translateY(0)';
               utilityBarRef.current.style.opacity = '1';
-              utilityBarRef.current.style.overflow = 'visible';
+              utilityBarRef.current.style.pointerEvents = 'auto';
+              headerRef.current.style.marginTop = '0';
             }
           }
         }
@@ -55,7 +56,7 @@ function useScrollAnimation(utilityBarRef: React.RefObject<HTMLDivElement>) {
         cancelAnimationFrame(rafRef.current);
       }
     };
-  }, []); // KHÔNG có dependency → chỉ setup 1 lần
+  }, []);
 }
 
 // Utility Bar Component - KHÔNG có blur (chỉ header mới có)
@@ -74,11 +75,11 @@ const UtilityBar = memo(function UtilityBar({
       className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800"
       style={{ 
         height: '40px',
-        maxHeight: '40px', // Để JS có thể set về 0
         opacity: 1,
-        overflow: 'visible',
-        transition: 'max-height 0.3s ease-out, opacity 0.3s ease-out',
-        willChange: 'max-height' // Animate max-height
+        transform: 'translateY(0)',
+        pointerEvents: 'auto',
+        transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+        willChange: 'transform, opacity'
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ height: '40px' }}>
@@ -198,10 +199,11 @@ export const Header = memo(function Header({ cartCount, onSearch, searchQuery, o
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const utilityBarRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Custom hook xử lý scroll - KHÔNG tạo re-render
-  useScrollAnimation(utilityBarRef);
+  useScrollAnimation(utilityBarRef, headerRef);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -253,12 +255,15 @@ export const Header = memo(function Header({ cartCount, onSearch, searchQuery, o
 
   return (
     <header 
+      ref={headerRef}
       className="sticky top-0 z-50 border-b border-gray-200/30 dark:border-gray-800/30"
       style={{
         // KHÔI PHỤC blur - CHỈ Ở HEADER (1 layer duy nhất)
         backgroundColor: isDark ? 'rgba(3, 7, 18, 0.7)' : 'rgba(255, 255, 255, 0.7)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)', // Safari support
+        marginTop: '0',
+        transition: 'margin-top 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
       {/* Top Utility Bar - ẨN HOÀN TOÀN khi scroll */}
