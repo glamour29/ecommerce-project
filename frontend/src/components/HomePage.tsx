@@ -328,8 +328,8 @@ export const HomePage = memo(function HomePage({ onShopNow, onCategoryClick }: H
           <div className="relative bg-gray-50 dark:bg-gray-900 rounded-none overflow-hidden">
             <div className="aspect-[2/1] relative">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1724934822176-320a7f9e1199?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbmVha2VyJTIwY2xvc2V1cCUyMGRldGFpbCUyMHByb2R1Y3R8ZW58MXx8fHwxNzY1MTI3ODU5fDA&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Trending Sneaker"
+                src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1920&q=80"
+                alt="Trending Fashion"
                 className="w-full h-full object-cover"
               />
             </div>
