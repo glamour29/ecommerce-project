@@ -56,7 +56,7 @@ export const FilterPanel = memo(function FilterPanel({
   const resetFilters = useCallback(() => {
     onFiltersChange({
       categories: [],
-      priceRange: [0, 2000000],
+      priceRange: [0, 1000000],
       minRating: 0
     });
   }, [onFiltersChange]);
@@ -64,7 +64,7 @@ export const FilterPanel = memo(function FilterPanel({
   const activeFiltersCount = 
     filters.categories.length + 
     (filters.minRating > 0 ? 1 : 0) +
-    ((filters.priceRange[0] !== 0 || filters.priceRange[1] !== 2000000) ? 1 : 0);
+    ((filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1000000) ? 1 : 0);
 
   return (
     <div className={`bg-white dark:bg-gray-900 ${isMobile ? 'h-full overflow-y-auto p-6' : 'rounded-xl border border-gray-200 dark:border-gray-700 p-6'}`}>
@@ -164,14 +164,14 @@ export const FilterPanel = memo(function FilterPanel({
                   onChange={(e) => handlePriceChange(1, Number(e.target.value))}
                   className="w-full px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   min={filters.priceRange[0]}
-                  max="2000000"
+                  max="1000000"
                 />
               </div>
             </div>
             <input
               type="range"
               min="0"
-              max="2000000"
+              max="1000000"
               step="10000"
               value={filters.priceRange[1]}
               onChange={(e) => handlePriceChange(1, Number(e.target.value))}

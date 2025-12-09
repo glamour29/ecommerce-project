@@ -23,7 +23,7 @@ export default function App() {
   const [sortOption, setSortOption] = useState<SortOption>('relevance');
   const [filters, setFilters] = useState<FilterState>({
     categories: [],
-    priceRange: [0, 2000000],
+    priceRange: [0, 1000000],
     minRating: 0
   });
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
