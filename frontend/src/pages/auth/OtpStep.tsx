@@ -4,10 +4,9 @@ interface OtpStepProps {
   email: string;
   onBack: () => void;
   onSignInSuccess: () => void;
-  isDark: boolean;
 }
 
-export const OtpStep = ({ email, onBack, onSignInSuccess, isDark }: OtpStepProps) => {
+export const OtpStep = ({ email, onBack, onSignInSuccess }: OtpStepProps) => {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -46,17 +45,21 @@ export const OtpStep = ({ email, onBack, onSignInSuccess, isDark }: OtpStepProps
 
     setLoading(true);
 
-    // Mock API call
-    setTimeout(() => {
-      // Simulate: code "123456" is correct
+    try {
+      // Mock API call - TODO: Thay bằng /auth/signin-otp
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Mock: code "123456" là đúng
       if (code === '123456') {
-        setLoading(false);
         onSignInSuccess();
       } else {
-        setLoading(false);
         setError('Mã xác thực không đúng. Vui lòng thử lại.');
       }
-    }, 1000);
+    } catch (err) {
+      setError('Có lỗi xảy ra. Vui lòng thử lại.');
+    } finally {
+      setLoading(false);
+    }
   }, [code, onSignInSuccess]);
 
   const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
@@ -66,22 +69,22 @@ export const OtpStep = ({ email, onBack, onSignInSuccess, isDark }: OtpStepProps
   }, [code, handleSignIn]);
 
   return (
-    <div className={`min-h-screen flex items-center justify-center px-4 ${isDark ? 'bg-black' : 'bg-white'}`}>
+    <div className="min-h-screen flex items-center justify-center px-4 bg-white">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-12">
-          <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>
+          <h1 className="text-2xl font-bold text-black">
             GayHub
           </h1>
         </div>
 
         {/* Title */}
-        <h2 className={`text-3xl font-normal mb-4 ${isDark ? 'text-white' : 'text-black'}`}>
+        <h2 className="text-3xl font-normal mb-4 text-black">
           Nhập mã 6 số đã gửi đến email của bạn.
         </h2>
 
         {/* Email Display */}
-        <p className={`text-sm mb-8 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+        <p className="text-sm mb-8 text-gray-600">
           <button onClick={onBack} className="underline hover:text-gray-500">
             {email}
           </button>
@@ -89,7 +92,7 @@ export const OtpStep = ({ email, onBack, onSignInSuccess, isDark }: OtpStepProps
 
         {/* Code Input */}
         <div className="mb-4">
-          <label className={`block text-sm mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+          <label className="block text-sm mb-2 text-gray-600">
             Mã 6 số*
           </label>
           <div className="relative">
@@ -100,11 +103,7 @@ export const OtpStep = ({ email, onBack, onSignInSuccess, isDark }: OtpStepProps
               onKeyPress={handleKeyPress}
               placeholder="000000"
               maxLength={6}
-              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors tracking-widest text-center text-2xl
-                ${isDark 
-                  ? 'bg-black text-white border-gray-700 focus:border-white placeholder-gray-600' 
-                  : 'bg-white text-black border-gray-300 focus:border-black placeholder-gray-400'
-                }
+              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors tracking-widest text-center text-2xl bg-white text-black border-gray-300 focus:border-black placeholder-gray-400
                 ${error ? 'border-red-500' : ''}`}
               disabled={loading}
             />
@@ -119,12 +118,12 @@ export const OtpStep = ({ email, onBack, onSignInSuccess, isDark }: OtpStepProps
           {canResend ? (
             <button
               onClick={handleResendCode}
-              className={`text-sm underline ${isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'}`}
+              className="text-sm underline text-gray-600 hover:text-black"
             >
               Gửi lại mã
             </button>
           ) : (
-            <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+            <p className="text-sm text-gray-500">
               Gửi lại mã sau {countdown}s
             </p>
           )}
@@ -155,21 +154,16 @@ export const OtpStep = ({ email, onBack, onSignInSuccess, isDark }: OtpStepProps
 
         {/* Use Password Link */}
         <button
-          className={`w-full py-4 rounded-full border font-medium text-base transition-all
-            ${isDark 
-              ? 'border-gray-700 text-white hover:bg-gray-900' 
-              : 'border-gray-300 text-black hover:bg-gray-100'
-            }`}
+          className="w-full py-4 rounded-full border border-gray-300 text-black font-medium text-base transition-all hover:bg-gray-100"
         >
           Sử dụng Mật khẩu
         </button>
 
         {/* Helper text */}
-        <p className={`text-xs mt-6 text-center ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-          Để test: nhập mã <code className="bg-gray-800 text-white px-2 py-1 rounded">123456</code>
+        <p className="text-xs mt-6 text-center text-gray-500">
+          💡 Test: nhập mã <code className="bg-gray-200 text-black px-2 py-1 rounded">123456</code>
         </p>
       </div>
     </div>
   );
 };
-

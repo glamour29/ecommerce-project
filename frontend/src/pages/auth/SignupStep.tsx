@@ -5,10 +5,9 @@ interface SignupStepProps {
   email: string;
   onBack: () => void;
   onSignupSuccess: () => void;
-  isDark: boolean;
 }
 
-export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupStepProps) => {
+export const SignupStep = ({ email, onBack, onSignupSuccess }: SignupStepProps) => {
   const [code, setCode] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -36,7 +35,6 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
 
   const handleResendCode = useCallback(() => {
     setCodeSent(false);
-    // Mock resend
     setTimeout(() => {
       setCodeSent(true);
       alert('Mã xác thực mới đã được gửi đến email của bạn!');
@@ -62,30 +60,34 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
 
     setLoading(true);
 
-    // Mock API call
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      // Mock API call - TODO: Thay bằng /auth/signup
+      await new Promise(resolve => setTimeout(resolve, 1500));
       onSignupSuccess();
-    }, 1500);
+    } catch (err) {
+      setErrors({ general: 'Có lỗi xảy ra. Vui lòng thử lại.' });
+    } finally {
+      setLoading(false);
+    }
   }, [code, firstName, lastName, password, shoppingPref, agreeTerms, isPasswordValid, onSignupSuccess]);
 
   return (
-    <div className={`min-h-screen flex items-center justify-center px-4 py-12 ${isDark ? 'bg-black' : 'bg-white'}`}>
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-white">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8">
-          <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>
+          <h1 className="text-2xl font-bold text-black">
             GayHub
           </h1>
         </div>
 
         {/* Title */}
-        <h2 className={`text-3xl font-normal mb-4 ${isDark ? 'text-white' : 'text-black'}`}>
+        <h2 className="text-3xl font-normal mb-4 text-black">
           Hãy trở thành Thành viên GayHub.
         </h2>
 
         {/* Subtitle */}
-        <p className={`text-sm mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+        <p className="text-sm mb-6 text-gray-600">
           Chúng tôi đã gửi mã xác thực đến{' '}
           <button onClick={onBack} className="underline hover:text-gray-500">
             {email}
@@ -94,7 +96,7 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
 
         {/* Code Input */}
         <div className="mb-4">
-          <label className={`block text-sm mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+          <label className="block text-sm mb-2 text-gray-600">
             Mã xác thực*
           </label>
           <div className="relative">
@@ -104,18 +106,14 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
               onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 8))}
               placeholder="Nhập mã 6-8 số"
               maxLength={8}
-              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors pr-12
-                ${isDark 
-                  ? 'bg-black text-white border-gray-700 focus:border-white placeholder-gray-600' 
-                  : 'bg-white text-black border-gray-300 focus:border-black placeholder-gray-400'
-                }
+              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors pr-12 bg-white text-black border-gray-300 focus:border-black placeholder-gray-400
                 ${errors.code ? 'border-red-500' : ''}`}
             />
             <button
               onClick={handleResendCode}
               disabled={!codeSent}
               className={`absolute right-3 top-1/2 -translate-y-1/2 ${
-                codeSent ? (isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black') : 'text-gray-400'
+                codeSent ? 'text-gray-600 hover:text-black' : 'text-gray-400'
               }`}
             >
               <RefreshCw className={`w-5 h-5 ${!codeSent ? 'animate-spin' : ''}`} />
@@ -127,7 +125,7 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
         {/* Name Fields */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
-            <label className={`block text-sm mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            <label className="block text-sm mb-2 text-gray-600">
               Tên*
             </label>
             <input
@@ -135,17 +133,13 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="Tên"
-              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors
-                ${isDark 
-                  ? 'bg-black text-white border-gray-700 focus:border-white placeholder-gray-600' 
-                  : 'bg-white text-black border-gray-300 focus:border-black placeholder-gray-400'
-                }
+              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors bg-white text-black border-gray-300 focus:border-black placeholder-gray-400
                 ${errors.firstName ? 'border-red-500' : ''}`}
             />
             {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
           </div>
           <div>
-            <label className={`block text-sm mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            <label className="block text-sm mb-2 text-gray-600">
               Họ*
             </label>
             <input
@@ -153,11 +147,7 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               placeholder="Họ"
-              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors
-                ${isDark 
-                  ? 'bg-black text-white border-gray-700 focus:border-white placeholder-gray-600' 
-                  : 'bg-white text-black border-gray-300 focus:border-black placeholder-gray-400'
-                }
+              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors bg-white text-black border-gray-300 focus:border-black placeholder-gray-400
                 ${errors.lastName ? 'border-red-500' : ''}`}
             />
             {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
@@ -166,7 +156,7 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
 
         {/* Password */}
         <div className="mb-4">
-          <label className={`block text-sm mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+          <label className="block text-sm mb-2 text-gray-600">
             Mật khẩu*
           </label>
           <div className="relative">
@@ -175,16 +165,12 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Mật khẩu"
-              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors pr-12
-                ${isDark 
-                  ? 'bg-black text-white border-gray-700 focus:border-white placeholder-gray-600' 
-                  : 'bg-white text-black border-gray-300 focus:border-black placeholder-gray-400'
-                }
+              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors pr-12 bg-white text-black border-gray-300 focus:border-black placeholder-gray-400
                 ${errors.password ? 'border-red-500' : ''}`}
             />
             <button
               onClick={() => setShowPassword(!showPassword)}
-              className={`absolute right-3 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'}`}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-black"
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -210,18 +196,14 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
 
         {/* Shopping Preference */}
         <div className="mb-4">
-          <label className={`block text-sm mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+          <label className="block text-sm mb-2 text-gray-600">
             Sở thích mua sắm*
           </label>
           <div className="relative">
             <select
               value={shoppingPref}
               onChange={(e) => setShoppingPref(e.target.value)}
-              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors appearance-none
-                ${isDark 
-                  ? 'bg-black text-white border-gray-700 focus:border-white' 
-                  : 'bg-white text-black border-gray-300 focus:border-black'
-                }
+              className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors appearance-none bg-white text-black border-gray-300 focus:border-black
                 ${errors.shoppingPref ? 'border-red-500' : ''}`}
             >
               <option value="">Chọn sở thích</option>
@@ -230,14 +212,14 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
               <option value="kids">Trẻ em</option>
               <option value="all">Tất cả</option>
             </select>
-            <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none text-gray-600" />
           </div>
           {errors.shoppingPref && <p className="text-red-500 text-sm mt-1">{errors.shoppingPref}</p>}
         </div>
 
         {/* Date of Birth */}
         <div className="mb-4">
-          <label className={`block text-sm mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+          <label className="block text-sm mb-2 text-gray-600">
             Ngày sinh
           </label>
           <div className="grid grid-cols-3 gap-2">
@@ -247,11 +229,7 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
               onChange={(e) => setDobDay(e.target.value.replace(/\D/g, '').slice(0, 2))}
               placeholder="Ngày"
               maxLength={2}
-              className={`px-4 py-3 border rounded-md text-base outline-none transition-colors
-                ${isDark 
-                  ? 'bg-black text-white border-gray-700 focus:border-white placeholder-gray-600' 
-                  : 'bg-white text-black border-gray-300 focus:border-black placeholder-gray-400'
-                }`}
+              className="px-4 py-3 border rounded-md text-base outline-none transition-colors bg-white text-black border-gray-300 focus:border-black placeholder-gray-400"
             />
             <input
               type="text"
@@ -259,11 +237,7 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
               onChange={(e) => setDobMonth(e.target.value.replace(/\D/g, '').slice(0, 2))}
               placeholder="Tháng"
               maxLength={2}
-              className={`px-4 py-3 border rounded-md text-base outline-none transition-colors
-                ${isDark 
-                  ? 'bg-black text-white border-gray-700 focus:border-white placeholder-gray-600' 
-                  : 'bg-white text-black border-gray-300 focus:border-black placeholder-gray-400'
-                }`}
+              className="px-4 py-3 border rounded-md text-base outline-none transition-colors bg-white text-black border-gray-300 focus:border-black placeholder-gray-400"
             />
             <input
               type="text"
@@ -271,14 +245,10 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
               onChange={(e) => setDobYear(e.target.value.replace(/\D/g, '').slice(0, 4))}
               placeholder="Năm"
               maxLength={4}
-              className={`px-4 py-3 border rounded-md text-base outline-none transition-colors
-                ${isDark 
-                  ? 'bg-black text-white border-gray-700 focus:border-white placeholder-gray-600' 
-                  : 'bg-white text-black border-gray-300 focus:border-black placeholder-gray-400'
-                }`}
+              className="px-4 py-3 border rounded-md text-base outline-none transition-colors bg-white text-black border-gray-300 focus:border-black placeholder-gray-400"
             />
           </div>
-          <p className={`text-xs mt-2 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+          <p className="text-xs mt-2 text-gray-500">
             Nhận phần thưởng Thành viên vào ngày sinh nhật của bạn.
           </p>
         </div>
@@ -292,7 +262,7 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
               onChange={(e) => setEmailUpdates(e.target.checked)}
               className="mt-1 w-4 h-4 rounded"
             />
-            <span className={`ml-3 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            <span className="ml-3 text-sm text-gray-600">
               Đăng ký email để nhận thông tin cập nhật về sản phẩm, ưu đãi và quyền lợi Thành viên.
             </span>
           </label>
@@ -303,7 +273,7 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
               onChange={(e) => setAgreeTerms(e.target.checked)}
               className="mt-1 w-4 h-4 rounded"
             />
-            <span className={`ml-3 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            <span className="ml-3 text-sm text-gray-600">
               Tôi đồng ý với{' '}
               <button className="underline hover:text-gray-500">Chính sách Quyền riêng tư</button>
               {' '}và{' '}
@@ -339,11 +309,7 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
         {/* Back Button */}
         <button
           onClick={onBack}
-          className={`w-full py-4 rounded-full border font-medium text-base transition-all
-            ${isDark 
-              ? 'border-gray-700 text-white hover:bg-gray-900' 
-              : 'border-gray-300 text-black hover:bg-gray-100'
-            }`}
+          className="w-full py-4 rounded-full border border-gray-300 text-black font-medium text-base transition-all hover:bg-gray-100"
         >
           Quay lại
         </button>
@@ -351,4 +317,3 @@ export const SignupStep = ({ email, onBack, onSignupSuccess, isDark }: SignupSte
     </div>
   );
 };
-

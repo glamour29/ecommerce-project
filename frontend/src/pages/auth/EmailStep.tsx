@@ -2,10 +2,9 @@ import React, { useState, useCallback } from 'react';
 
 interface EmailStepProps {
   onContinue: (email: string, exists: boolean) => void;
-  isDark: boolean;
 }
 
-export const EmailStep = ({ onContinue, isDark }: EmailStepProps) => {
+export const EmailStep = ({ onContinue }: EmailStepProps) => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -30,13 +29,21 @@ export const EmailStep = ({ onContinue, isDark }: EmailStepProps) => {
 
     setLoading(true);
 
-    // Mock API call - check if email exists
-    setTimeout(() => {
-      // Simulate: emails ending with "new" are new accounts
-      const emailExists = !email.includes('new');
+    try {
+      // Mock API call - Kiểm tra email có tồn tại không
+      // TODO: Thay bằng API thật: /auth/check-email?email=...
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Mock response: email có "existing" = đã tồn tại, ngược lại = mới
+      const exists = email.toLowerCase().includes('existing');
+      
+      // Gọi callback với kết quả
+      onContinue(email, exists);
+    } catch (err) {
+      setError('Có lỗi xảy ra. Vui lòng thử lại.');
+    } finally {
       setLoading(false);
-      onContinue(email, emailExists);
-    }, 800);
+    }
   }, [email, onContinue]);
 
   const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
@@ -46,33 +53,33 @@ export const EmailStep = ({ onContinue, isDark }: EmailStepProps) => {
   }, [handleContinue]);
 
   return (
-    <div className={`min-h-screen flex items-center justify-center px-4 ${isDark ? 'bg-black' : 'bg-white'}`}>
+    <div className="min-h-screen flex items-center justify-center px-4 bg-white">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-12">
-          <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-black'}`}>
+          <h1 className="text-2xl font-bold text-black">
             GayHub
           </h1>
         </div>
 
         {/* Title */}
-        <h2 className={`text-3xl font-normal mb-8 ${isDark ? 'text-white' : 'text-black'}`}>
+        <h2 className="text-3xl font-normal mb-8 text-black">
           Nhập email để tham gia hoặc đăng nhập.
         </h2>
 
         {/* Country */}
         <div className="mb-8">
-          <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+          <span className="text-sm text-gray-600">
             Vietnam{' '}
           </span>
-          <button className={`text-sm underline ${isDark ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
+          <button className="text-sm underline text-gray-600 hover:text-gray-800">
             Thay đổi
           </button>
         </div>
 
         {/* Email Input */}
         <div className="mb-6">
-          <label className={`block text-sm mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+          <label className="block text-sm mb-2 text-gray-600">
             Email*
           </label>
           <input
@@ -81,11 +88,7 @@ export const EmailStep = ({ onContinue, isDark }: EmailStepProps) => {
             onChange={(e) => setEmail(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="email@example.com"
-            className={`w-full px-4 py-3 border rounded-md text-base outline-none transition-colors
-              ${isDark 
-                ? 'bg-black text-white border-gray-700 focus:border-white placeholder-gray-600' 
-                : 'bg-white text-black border-gray-300 focus:border-black placeholder-gray-400'
-              }`}
+            className="w-full px-4 py-3 border border-gray-300 rounded-md text-base outline-none transition-colors bg-white text-black placeholder-gray-400 focus:border-black"
             disabled={loading}
           />
           {error && (
@@ -94,13 +97,13 @@ export const EmailStep = ({ onContinue, isDark }: EmailStepProps) => {
         </div>
 
         {/* Privacy Policy */}
-        <p className={`text-sm mb-8 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+        <p className="text-sm mb-8 text-gray-600">
           Bằng cách tiếp tục, tôi đồng ý với{' '}
-          <button className={`underline ${isDark ? 'hover:text-gray-300' : 'hover:text-gray-800'}`}>
+          <button className="underline hover:text-gray-800">
             Chính sách Quyền riêng tư
           </button>
           {' '}và{' '}
-          <button className={`underline ${isDark ? 'hover:text-gray-300' : 'hover:text-gray-800'}`}>
+          <button className="underline hover:text-gray-800">
             Điều khoản Sử dụng
           </button>
           .
@@ -122,14 +125,18 @@ export const EmailStep = ({ onContinue, isDark }: EmailStepProps) => {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
-              Đang xử lý...
+              Đang kiểm tra...
             </span>
           ) : (
             'Tiếp tục'
           )}
         </button>
+
+        {/* Helper text */}
+        <p className="text-xs mt-6 text-center text-gray-500">
+          💡 Test: Email có "existing" → OTP | Email khác → Sign Up
+        </p>
       </div>
     </div>
   );
 };
-
