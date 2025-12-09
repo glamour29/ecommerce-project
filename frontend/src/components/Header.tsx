@@ -10,7 +10,7 @@ interface HeaderProps {
 
 type MenuKey = 'featured' | 'men' | 'women' | 'kids' | 'sale';
 
-// Custom hook để handle scroll WITHOUT re-render - ẨN HOÀN TOÀN taskbar
+// Custom hook để handle scroll WITHOUT re-render - Dùng transform thay vì max-height
 function useScrollAnimation(utilityBarRef: React.RefObject<HTMLDivElement>) {
   const rafRef = useRef<number | null>(null);
   const isHidden = useRef(false);
@@ -28,17 +28,15 @@ function useScrollAnimation(utilityBarRef: React.RefObject<HTMLDivElement>) {
           isHidden.current = shouldHide;
           
           if (utilityBarRef.current) {
-            // Update DOM trực tiếp, KHÔNG trigger re-render
+            // Dùng transform (GPU-accelerated) thay vì max-height
             if (shouldHide) {
-              // ẨN HOÀN TOÀN - không chừa khoảng trắng
-              utilityBarRef.current.style.maxHeight = '0';
+              // Trượt lên trên và ẩn đi
+              utilityBarRef.current.style.transform = 'translateY(-100%)';
               utilityBarRef.current.style.opacity = '0';
-              utilityBarRef.current.style.overflow = 'hidden';
             } else {
-              // HIỆN LẠI
-              utilityBarRef.current.style.maxHeight = '40px';
+              // Hiện lại
+              utilityBarRef.current.style.transform = 'translateY(0)';
               utilityBarRef.current.style.opacity = '1';
-              utilityBarRef.current.style.overflow = 'visible';
             }
           }
         }
@@ -74,11 +72,10 @@ const UtilityBar = memo(function UtilityBar({
       className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800"
       style={{ 
         height: '40px',
-        maxHeight: '40px', // Để JS có thể set về 0
         opacity: 1,
-        overflow: 'visible',
-        transition: 'max-height 0.3s ease-out, opacity 0.3s ease-out',
-        willChange: 'max-height' // Animate max-height
+        transform: 'translateY(0)',
+        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        willChange: 'transform, opacity' // GPU-accelerated properties only
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ height: '40px' }}>
