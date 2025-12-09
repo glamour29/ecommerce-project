@@ -59,7 +59,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
   const [quantity] = useState(1);
 
   const { addItem: addToCart } = useCartStore();
-  const { addItem: addToFavorites, removeItem: removeFromFavorites, hasItem: isFavorite } = useFavoriteStore();
+  const { toggleItem: toggleFavorite, isFavorite } = useFavoriteStore();
 
   const isInFavorites = isFavorite(product.id);
   const discount = product.originalPrice
@@ -80,31 +80,21 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
       quantity,
       size: selectedSize || undefined,
       color: selectedColor,
-      category: product.category,
-      rating: product.rating,
-      description: product.description,
-      stock: 100,
     });
 
     alert('Đã thêm vào giỏ hàng!');
   };
 
   const handleToggleFavorite = () => {
-    if (isInFavorites) {
-      removeFromFavorites(product.id);
-    } else {
-      addToFavorites({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        originalPrice: product.originalPrice,
-        image: MOCK_PRODUCT.images[0],
-        category: product.category,
-        rating: product.rating,
-        description: product.description,
-        stock: 100,
-      });
-    }
+    toggleFavorite({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      image: MOCK_PRODUCT.images[0],
+      category: product.category,
+      rating: product.rating,
+    });
   };
 
   return (
