@@ -209,6 +209,12 @@ export default function App() {
 
   // Filter, search, and sort products
   const filteredAndSortedProducts = useMemo(() => {
+    console.log('🔍 FILTERING PRODUCTS:', {
+      totalProducts: products.length,
+      filters: filters,
+      searchQuery: searchQuery
+    });
+    
     let result = [...products];
 
     // Apply search filter
@@ -219,6 +225,7 @@ export default function App() {
         product.description.toLowerCase().includes(query) ||
         product.category.toLowerCase().includes(query)
       );
+      console.log('After search filter:', result.length);
     }
 
     // Apply category filter
@@ -226,6 +233,7 @@ export default function App() {
       result = result.filter(product => 
         filters.categories.includes(product.category)
       );
+      console.log('After category filter:', result.length);
     }
 
     // Apply price filter - only if not the default "show all" range
@@ -234,12 +242,16 @@ export default function App() {
         product.price >= filters.priceRange[0] && 
         product.price <= filters.priceRange[1]
       );
+      console.log('After price filter:', result.length);
     }
 
     // Apply rating filter
     if (filters.minRating > 0) {
       result = result.filter(product => product.rating >= filters.minRating);
+      console.log('After rating filter:', result.length);
     }
+    
+    console.log('✅ FINAL RESULT:', result.length, 'products');
 
     // Apply sorting
     switch (sortOption) {
