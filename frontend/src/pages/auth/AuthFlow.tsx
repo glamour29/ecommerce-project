@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { EmailStep } from './EmailStep';
 import { SignupStep } from './SignupStep';
 import { OtpStep } from './OtpStep';
-import { useUser } from '../contexts/UserContext';
+import { useUser } from '../../contexts/UserContext';
 
 type AuthStep = 'email' | 'signup' | 'otp' | 'success';
 
