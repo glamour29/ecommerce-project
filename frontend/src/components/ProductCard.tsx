@@ -77,19 +77,29 @@ export const ProductCard = memo(function ProductCard({ product, isWishlisted, on
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 dark:bg-gray-700">
         {!imageLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
             <div className="w-8 h-8 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
         )}
-        <img
-          src={product.image}
-          alt={product.name}
-          onLoad={handleImageLoad}
-          className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          loading="lazy"
-        />
+        {imageError ? (
+          <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+            <div className="text-center text-gray-400">
+              <div className="text-4xl mb-2">📦</div>
+              <div className="text-xs">Ảnh sản phẩm</div>
+            </div>
+          </div>
+        ) : (
+          <img
+            src={product.image}
+            alt={product.name}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+            className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${
+              imageLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            loading="lazy"
+          />
+        )}
       </div>
 
       {/* Content */}
