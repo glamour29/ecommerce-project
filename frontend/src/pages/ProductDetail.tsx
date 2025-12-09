@@ -281,7 +281,10 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
         </div>
       </div>
 
-      {/* Recommended Products Section */}
+      {/* Divider */}
+      <div className="border-t border-gray-200 my-16"></div>
+
+      {/* Recommended Products Section - Separate scroll area */}
       <RecommendedProducts currentProductId={product.id} />
     </div>
   );
@@ -319,11 +322,16 @@ const RecommendedProducts = ({ currentProductId }: { currentProductId: string })
   ].filter((p) => p.id !== currentProductId);
 
   return (
-    <section className="bg-white py-16 border-t border-gray-200">
+    <section className="bg-gray-50 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">
-          Có Thể Bạn Cũng Thích
-        </h2>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Có Thể Bạn Cũng Thích
+          </h2>
+          <p className="text-gray-600">
+            Khám phá thêm các sản phẩm tương tự
+          </p>
+        </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {recommendedProducts.map((product) => (

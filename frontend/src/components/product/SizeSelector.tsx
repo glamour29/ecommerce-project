@@ -38,7 +38,7 @@ export const SizeSelector = memo(({ sizes, selectedSize, onSelectSize, type = 's
                 : 'border-gray-200 bg-white text-gray-900 hover:border-gray-400'
             }`}
           >
-            {type === 'shoe' ? `EU ${size}` : size}
+            {size}
           </button>
         ))}
       </div>
