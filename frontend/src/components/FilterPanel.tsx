@@ -61,10 +61,10 @@ export const FilterPanel = memo(function FilterPanel({
     });
   }, [onFiltersChange]);
 
+  // Only count non-default filters as active
   const activeFiltersCount = 
     filters.categories.length + 
-    (filters.minRating > 0 ? 1 : 0) +
-    ((filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1000000) ? 1 : 0);
+    (filters.minRating > 0 ? 1 : 0);
 
   return (
     <div className={`bg-white dark:bg-gray-900 ${isMobile ? 'h-full overflow-y-auto p-6' : 'rounded-xl border border-gray-200 dark:border-gray-700 p-6'}`}>

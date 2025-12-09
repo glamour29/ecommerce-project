@@ -228,11 +228,13 @@ export default function App() {
       );
     }
 
-    // Apply price filter
-    result = result.filter(product => 
-      product.price >= filters.priceRange[0] && 
-      product.price <= filters.priceRange[1]
-    );
+    // Apply price filter - only if not the default "show all" range
+    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000000) {
+      result = result.filter(product => 
+        product.price >= filters.priceRange[0] && 
+        product.price <= filters.priceRange[1]
+      );
+    }
 
     // Apply rating filter
     if (filters.minRating > 0) {
