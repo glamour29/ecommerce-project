@@ -24,6 +24,7 @@ interface ProductCardProps {
 
 export const ProductCard = memo(function ProductCard({ product, isWishlisted, onAddToCart, onToggleWishlist }: ProductCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const discount = useMemo(() => 
     product.originalPrice 
@@ -44,6 +45,12 @@ export const ProductCard = memo(function ProductCard({ product, isWishlisted, on
 
   const handleImageLoad = useCallback(() => {
     setImageLoaded(true);
+    setImageError(false);
+  }, []);
+
+  const handleImageError = useCallback(() => {
+    setImageLoaded(true);
+    setImageError(true);
   }, []);
 
   return (
