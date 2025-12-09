@@ -8,6 +8,8 @@ interface HeaderProps {
   searchQuery: string;
   onNavigateHome?: () => void;
   onNavigateAuth?: () => void;
+  onNavigateCart?: () => void;
+  onNavigateFavorites?: () => void;
 }
 
 type MenuKey = 'featured' | 'men' | 'women' | 'kids' | 'sale';
@@ -193,11 +195,13 @@ function arePropsEqual(prevProps: HeaderProps, nextProps: HeaderProps) {
     prevProps.searchQuery === nextProps.searchQuery &&
     prevProps.onSearch === nextProps.onSearch &&
     prevProps.onNavigateHome === nextProps.onNavigateHome &&
-    prevProps.onNavigateAuth === nextProps.onNavigateAuth
+    prevProps.onNavigateAuth === nextProps.onNavigateAuth &&
+    prevProps.onNavigateCart === nextProps.onNavigateCart &&
+    prevProps.onNavigateFavorites === nextProps.onNavigateFavorites
   );
 }
 
-export const Header = memo(function Header({ cartCount, onSearch, searchQuery, onNavigateHome, onNavigateAuth }: HeaderProps) {
+export const Header = memo(function Header({ cartCount, onSearch, searchQuery, onNavigateHome, onNavigateAuth, onNavigateCart, onNavigateFavorites }: HeaderProps) {
   const [activeMenu, setActiveMenu] = useState<MenuKey | null>(null);
   const [isDark, setIsDark] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -320,10 +324,18 @@ export const Header = memo(function Header({ cartCount, onSearch, searchQuery, o
             </div>
 
             {/* Icons - Fixed sizes, no blur */}
-            <button className="hidden md:block p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-900 dark:text-white" style={{ transition: 'background-color 0.2s', width: '40px', height: '40px' }}>
+            <button 
+              onClick={onNavigateFavorites}
+              className="hidden md:block p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-900 dark:text-white" 
+              style={{ transition: 'background-color 0.2s', width: '40px', height: '40px' }}
+            >
               <Heart className="w-6 h-6" />
             </button>
-            <button className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-900 dark:text-white" style={{ transition: 'background-color 0.2s', width: '40px', height: '40px' }}>
+            <button 
+              onClick={onNavigateCart}
+              className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-900 dark:text-white" 
+              style={{ transition: 'background-color 0.2s', width: '40px', height: '40px' }}
+            >
               <ShoppingCart className="w-6 h-6" />
               {cartCount > 0 && (
                 <span className="absolute top-0 right-0 bg-orange-500 text-white text-xs rounded-full flex items-center justify-center font-medium" style={{ width: '20px', height: '20px' }}>

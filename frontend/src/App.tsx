@@ -8,6 +8,8 @@ import { SortDropdown, type SortOption } from './components/SortDropdown';
 import { Pagination } from './components/Pagination';
 import { Footer } from './components/Footer';
 import { AuthFlow } from './pages/auth/AuthFlow';
+import { Cart } from './pages/Cart';
+import { Favorites } from './pages/Favorites';
 import { UserProvider } from './contexts/UserContext';
 import { projectId, publicAnonKey } from './utils/supabase/info';
 
@@ -17,7 +19,7 @@ const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-
 const USER_ID = 'demo-user-001';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'catalogue' | 'auth'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'catalogue' | 'auth' | 'cart' | 'favorites'>('home');
   const [products, setProducts] = useState<Product[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [cart, setCart] = useState<Array<{ productId: string; quantity: number }>>([]);
@@ -171,6 +173,14 @@ export default function App() {
     setCurrentPage('auth');
   }, []);
 
+  const handleNavigateCart = useCallback(() => {
+    setCurrentPage('cart');
+  }, []);
+
+  const handleNavigateFavorites = useCallback(() => {
+    setCurrentPage('favorites');
+  }, []);
+
   const handleShopNow = useCallback(() => {
     setCurrentPage('catalogue');
   }, []);
@@ -274,6 +284,47 @@ export default function App() {
     return <AuthFlow />;
   }
 
+  // Show Cart Page
+  if (currentPage === 'cart') {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        <Header 
+          cartCount={cartItemCount}
+          onSearch={setSearchQuery}
+          searchQuery={searchQuery}
+          onNavigateHome={handleNavigateHome}
+          onNavigateAuth={handleNavigateAuth}
+          onNavigateCart={handleNavigateCart}
+          onNavigateFavorites={handleNavigateFavorites}
+        />
+        <Cart 
+          onNavigateHome={handleNavigateHome}
+          onCheckout={() => alert('Checkout coming soon!')}
+        />
+        <Footer />
+      </div>
+    );
+  }
+
+  // Show Favorites Page
+  if (currentPage === 'favorites') {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        <Header 
+          cartCount={cartItemCount}
+          onSearch={setSearchQuery}
+          searchQuery={searchQuery}
+          onNavigateHome={handleNavigateHome}
+          onNavigateAuth={handleNavigateAuth}
+          onNavigateCart={handleNavigateCart}
+          onNavigateFavorites={handleNavigateFavorites}
+        />
+        <Favorites onNavigateHome={handleNavigateHome} />
+        <Footer />
+      </div>
+    );
+  }
+
   // Show HomePage
   if (currentPage === 'home') {
     return (
@@ -284,6 +335,8 @@ export default function App() {
           searchQuery={searchQuery}
           onNavigateHome={handleNavigateHome}
           onNavigateAuth={handleNavigateAuth}
+          onNavigateCart={handleNavigateCart}
+          onNavigateFavorites={handleNavigateFavorites}
         />
         <HomePage 
           onShopNow={handleShopNow} 
@@ -303,6 +356,8 @@ export default function App() {
         searchQuery={searchQuery}
         onNavigateHome={handleNavigateHome}
         onNavigateAuth={handleNavigateAuth}
+        onNavigateCart={handleNavigateCart}
+        onNavigateFavorites={handleNavigateFavorites}
       />
 
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-8">
