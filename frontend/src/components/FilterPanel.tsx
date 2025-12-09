@@ -147,6 +147,16 @@ export const FilterPanel = memo(function FilterPanel({
             {/* Preset Price Ranges */}
             <div className="grid grid-cols-2 gap-2">
               <button
+                onClick={() => onFiltersChange({ ...filters, priceRange: [0, 1000000] })}
+                className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
+                  filters.priceRange[0] === 0 && filters.priceRange[1] === 1000000
+                    ? 'bg-orange-600 text-white border-orange-600'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-orange-600 dark:hover:border-orange-600'
+                }`}
+              >
+                Tất Cả
+              </button>
+              <button
                 onClick={() => onFiltersChange({ ...filters, priceRange: [0, 100000] })}
                 className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
                   filters.priceRange[0] === 0 && filters.priceRange[1] === 100000
