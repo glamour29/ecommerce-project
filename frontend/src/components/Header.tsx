@@ -6,6 +6,7 @@ interface HeaderProps {
   onSearch: (query: string) => void;
   searchQuery: string;
   onNavigateHome?: () => void;
+  onNavigateHelp?: () => void;
 }
 
 type MenuKey = 'featured' | 'men' | 'women' | 'kids' | 'sale';
@@ -102,9 +103,12 @@ const UtilityBar = memo(function UtilityBar({
               <span className="hidden sm:inline">Tìm Cửa Hàng</span>
             </button>
             <span className="text-gray-400 dark:text-gray-500 hidden sm:inline">•</span>
-            <button className="px-2.5 py-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors">Trợ Giúp</button>
-            <span className="text-gray-400 dark:text-gray-500">•</span>
-            <button className="px-2.5 py-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors">Tham Gia</button>
+            <button 
+              onClick={onNavigateHelp}
+              className="px-2.5 py-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors"
+            >
+              Trợ Giúp
+            </button>
             <span className="text-gray-400 dark:text-gray-500">•</span>
             <button className="px-2.5 py-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors flex items-center space-x-1">
               <User className="w-3 h-3" />
@@ -188,11 +192,12 @@ function arePropsEqual(prevProps: HeaderProps, nextProps: HeaderProps) {
     prevProps.cartCount === nextProps.cartCount &&
     prevProps.searchQuery === nextProps.searchQuery &&
     prevProps.onSearch === nextProps.onSearch &&
-    prevProps.onNavigateHome === nextProps.onNavigateHome
+    prevProps.onNavigateHome === nextProps.onNavigateHome &&
+    prevProps.onNavigateHelp === nextProps.onNavigateHelp
   );
 }
 
-export const Header = memo(function Header({ cartCount, onSearch, searchQuery, onNavigateHome }: HeaderProps) {
+export const Header = memo(function Header({ cartCount, onSearch, searchQuery, onNavigateHome, onNavigateHelp }: HeaderProps) {
   const [activeMenu, setActiveMenu] = useState<MenuKey | null>(null);
   const [isDark, setIsDark] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
