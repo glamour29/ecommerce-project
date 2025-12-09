@@ -10,8 +10,8 @@ interface HeaderProps {
 
 type MenuKey = 'featured' | 'men' | 'women' | 'kids' | 'sale';
 
-// Custom hook để handle scroll - Dùng transform KHÔNG giật
-function useScrollAnimation(utilityBarRef: React.RefObject<HTMLDivElement>, headerRef: React.RefObject<HTMLElement>) {
+// Custom hook để handle scroll - CHỈ ẨN utility bar
+function useScrollAnimation(utilityBarRef: React.RefObject<HTMLDivElement>) {
   const rafRef = useRef<number | null>(null);
   const isHidden = useRef(false);
 
@@ -27,19 +27,21 @@ function useScrollAnimation(utilityBarRef: React.RefObject<HTMLDivElement>, head
         if (shouldHide !== isHidden.current) {
           isHidden.current = shouldHide;
           
-          if (utilityBarRef.current && headerRef.current) {
+          if (utilityBarRef.current) {
             if (shouldHide) {
-              // ẨN: Dùng transform + margin âm để header trồi lên
-              utilityBarRef.current.style.transform = 'translateY(-100%)';
+              // ẨN utility bar - không để gap trắng
+              utilityBarRef.current.style.height = '0';
+              utilityBarRef.current.style.minHeight = '0';
               utilityBarRef.current.style.opacity = '0';
+              utilityBarRef.current.style.overflow = 'hidden';
               utilityBarRef.current.style.pointerEvents = 'none';
-              headerRef.current.style.marginTop = '-40px';
             } else {
-              // HIỆN: Reset về vị trí ban đầu
-              utilityBarRef.current.style.transform = 'translateY(0)';
+              // HIỆN lại utility bar
+              utilityBarRef.current.style.height = '40px';
+              utilityBarRef.current.style.minHeight = '40px';
               utilityBarRef.current.style.opacity = '1';
+              utilityBarRef.current.style.overflow = 'visible';
               utilityBarRef.current.style.pointerEvents = 'auto';
-              headerRef.current.style.marginTop = '0';
             }
           }
         }
@@ -75,11 +77,11 @@ const UtilityBar = memo(function UtilityBar({
       className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800"
       style={{ 
         height: '40px',
+        minHeight: '40px',
         opacity: 1,
-        transform: 'translateY(0)',
+        overflow: 'visible',
         pointerEvents: 'auto',
-        transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-        willChange: 'transform, opacity'
+        transition: 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ height: '40px' }}>
@@ -199,11 +201,10 @@ export const Header = memo(function Header({ cartCount, onSearch, searchQuery, o
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const utilityBarRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Custom hook xử lý scroll - KHÔNG tạo re-render
-  useScrollAnimation(utilityBarRef, headerRef);
+  // Custom hook xử lý scroll - CHỈ ẨN utility bar
+  useScrollAnimation(utilityBarRef);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -255,15 +256,12 @@ export const Header = memo(function Header({ cartCount, onSearch, searchQuery, o
 
   return (
     <header 
-      ref={headerRef}
       className="sticky top-0 z-50 border-b border-gray-200/30 dark:border-gray-800/30"
       style={{
         // KHÔI PHỤC blur - CHỈ Ở HEADER (1 layer duy nhất)
         backgroundColor: isDark ? 'rgba(3, 7, 18, 0.7)' : 'rgba(255, 255, 255, 0.7)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)', // Safari support
-        marginTop: '0',
-        transition: 'margin-top 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
       {/* Top Utility Bar - ẨN HOÀN TOÀN khi scroll */}
