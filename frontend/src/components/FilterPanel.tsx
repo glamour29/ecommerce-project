@@ -143,40 +143,57 @@ export const FilterPanel = memo(function FilterPanel({
         </button>
         
         {expandedSections.price && (
-          <div className="space-y-4 animate-in fade-in duration-200">
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1 font-medium">Tối thiểu</label>
-                <input
-                  type="number"
-                  value={filters.priceRange[0]}
-                  onChange={(e) => handlePriceChange(0, Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  min="0"
-                  max={filters.priceRange[1]}
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1 font-medium">Tối đa</label>
-                <input
-                  type="number"
-                  value={filters.priceRange[1]}
-                  onChange={(e) => handlePriceChange(1, Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  min={filters.priceRange[0]}
-                  max="1000000"
-                />
-              </div>
+          <div className="space-y-3 animate-in fade-in duration-200">
+            {/* Preset Price Ranges */}
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => onFiltersChange({ ...filters, priceRange: [0, 100000] })}
+                className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
+                  filters.priceRange[0] === 0 && filters.priceRange[1] === 100000
+                    ? 'bg-orange-600 text-white border-orange-600'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-orange-600 dark:hover:border-orange-600'
+                }`}
+              >
+                Dưới 100k
+              </button>
+              <button
+                onClick={() => onFiltersChange({ ...filters, priceRange: [100000, 300000] })}
+                className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
+                  filters.priceRange[0] === 100000 && filters.priceRange[1] === 300000
+                    ? 'bg-orange-600 text-white border-orange-600'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-orange-600 dark:hover:border-orange-600'
+                }`}
+              >
+                100k - 300k
+              </button>
+              <button
+                onClick={() => onFiltersChange({ ...filters, priceRange: [300000, 500000] })}
+                className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
+                  filters.priceRange[0] === 300000 && filters.priceRange[1] === 500000
+                    ? 'bg-orange-600 text-white border-orange-600'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-orange-600 dark:hover:border-orange-600'
+                }`}
+              >
+                300k - 500k
+              </button>
+              <button
+                onClick={() => onFiltersChange({ ...filters, priceRange: [500000, 1000000] })}
+                className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
+                  filters.priceRange[0] === 500000 && filters.priceRange[1] === 1000000
+                    ? 'bg-orange-600 text-white border-orange-600'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-orange-600 dark:hover:border-orange-600'
+                }`}
+              >
+                500k - 1M
+              </button>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="1000000"
-              step="10000"
-              value={filters.priceRange[1]}
-              onChange={(e) => handlePriceChange(1, Number(e.target.value))}
-              className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-orange-600"
-            />
+
+            {/* Current Selection Display */}
+            <div className="text-center py-2 px-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
+                {filters.priceRange[0].toLocaleString('vi-VN')}đ - {filters.priceRange[1].toLocaleString('vi-VN')}đ
+              </span>
+            </div>
           </div>
         )}
       </div>
