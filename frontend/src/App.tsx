@@ -190,6 +190,13 @@ export default function App() {
   }, []);
 
   const handleShopNow = useCallback(() => {
+    // Reset filters to default when entering catalogue
+    setFilters({
+      categories: [],
+      priceRange: [0, 1000000],
+      minRating: 0
+    });
+    setSearchQuery('');
     setCurrentPage('catalogue');
   }, []);
 
@@ -290,6 +297,18 @@ export default function App() {
   useEffect(() => {
     setCataloguePage(1);
   }, [searchQuery, filters, sortOption]);
+
+  // Ensure filters are reset when first entering catalogue page
+  useEffect(() => {
+    if (currentPage === 'catalogue' && filters.categories.length > 0) {
+      console.log('⚠️ Categories detected on catalogue page load! Resetting...');
+      setFilters({
+        categories: [],
+        priceRange: [0, 1000000],
+        minRating: 0
+      });
+    }
+  }, [currentPage]);
 
   // Use Zustand cart store instead of local state
   const { getItemCount } = useCartStore();
