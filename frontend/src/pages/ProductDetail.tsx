@@ -98,8 +98,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
       {/* Product Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Left: Product Image */}
-          <div>
+          {/* Left: Product Image - Sticky */}
+          <div className="lg:sticky lg:top-24 lg:h-fit">
             <div className="relative bg-gray-50 rounded-2xl overflow-hidden aspect-square">
               <img
                 src={product.image}
@@ -109,7 +109,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
             </div>
           </div>
 
-          {/* Right: Product Info */}
+          {/* Right: Product Info - Scrollable */}
           <div>
             {/* Title & Price */}
             <div className="mb-6">

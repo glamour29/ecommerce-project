@@ -87,7 +87,8 @@ const UtilityBar = memo(function UtilityBar({
         opacity: 1,
         overflow: 'visible',
         pointerEvents: 'auto',
-        transition: 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        transition: 'height 0.2s ease-out, opacity 0.2s ease-out, min-height 0.2s ease-out',
+        willChange: 'height, opacity',
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ height: '40px' }}>
