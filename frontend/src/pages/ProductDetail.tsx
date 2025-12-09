@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Heart, Star, Package, Truck, RotateCcw } from 'lucide-react';
-import { ProductImageGallery } from '../components/product/ProductImageGallery';
 import { SizeSelector } from '../components/product/SizeSelector';
-import { ColorSelector } from '../components/product/ColorSelector';
 import { AccordionSection } from '../components/product/AccordionSection';
 import { useCartStore } from '../store/cartStore';
 import { useFavoriteStore } from '../store/favoriteStore';
@@ -55,7 +53,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
   const productFromList = products.find(p => p.id === productId);
   const product = productFromList || MOCK_PRODUCT;
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<string>(MOCK_PRODUCT.colors[0].name);
   const [quantity] = useState(1);
 
   const { addItem: addToCart } = useCartStore();
@@ -73,13 +70,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
     }
 
     addToCart({
-      id: `${product.id}-${selectedSize || 'default'}-${selectedColor}`,
+      id: `${product.id}-${selectedSize || 'default'}`,
       name: product.name,
       price: product.price,
-      image: MOCK_PRODUCT.images[0],
+      image: product.image,
       quantity,
       size: selectedSize || undefined,
-      color: selectedColor,
     });
 
     alert('Đã thêm vào giỏ hàng!');
@@ -91,7 +87,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
       name: product.name,
       price: product.price,
       originalPrice: product.originalPrice,
-      image: MOCK_PRODUCT.images[0],
+      image: product.image,
       category: product.category,
       rating: product.rating,
     });
@@ -102,12 +98,15 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
       {/* Product Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Left: Images */}
+          {/* Left: Product Image */}
           <div>
-            <ProductImageGallery
-              images={MOCK_PRODUCT.images}
-              productName={MOCK_PRODUCT.name}
-            />
+            <div className="relative bg-gray-50 rounded-2xl overflow-hidden aspect-square">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
 
           {/* Right: Product Info */}
@@ -152,13 +151,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
                 </span>
               </div>
             </div>
-
-            {/* Color Selector */}
-            <ColorSelector
-              colors={MOCK_PRODUCT.colors}
-              selectedColor={selectedColor}
-              onSelectColor={setSelectedColor}
-            />
 
             {/* Size Selector */}
             <SizeSelector
@@ -229,7 +221,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, product
                 <div className="space-y-3">
                   <p>{product.description}</p>
                   <ul className="list-disc list-inside space-y-2">
-                    <li>Màu: {selectedColor}</li>
+                    <li>Danh mục: {product.category}</li>
                     <li>Mã sản phẩm: {MOCK_PRODUCT.styleCode}</li>
                     <li>Xuất xứ: {MOCK_PRODUCT.origin}</li>
                   </ul>
