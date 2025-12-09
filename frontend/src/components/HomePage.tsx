@@ -256,14 +256,15 @@ export const HomePage = memo(function HomePage({ onShopNow, onCategoryClick }: H
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <h3 className="text-2xl text-black dark:text-white mb-6 font-bold">Nổi Bật</h3>
           <div className="grid md:grid-cols-2 gap-3">
-            {/* Top Left - Outdoor/Snow */}
+            {/* Top Left - Winter Sports */}
             <div className="relative aspect-[3/2] overflow-hidden group cursor-pointer">
               <ImageWithFallback
                 src="https://images.unsplash.com/photo-1759281946253-1e289a1bcc3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbm93JTIwbW91bnRhaW4lMjBvdXRkb29yJTIwZ2VhcnxlbnwxfHx8fDE3NjUxMjc4NjB8MA&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Outdoor Gear"
+                alt="Trang Phục Mùa Đông"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute bottom-6 left-6 text-white">
+                <h4 className="text-xl mb-3 font-bold">Trang Phục Mùa Đông</h4>
                 <button className="px-6 py-2 bg-white text-black rounded-full text-sm hover:bg-gray-100 transition-colors font-medium">
                   Mua Ngay
                 </button>
@@ -288,10 +289,10 @@ export const HomePage = memo(function HomePage({ onShopNow, onCategoryClick }: H
               </div>
             </div>
 
-            {/* Bottom Left - Running */}
+            {/* Bottom Left - Running Shoes */}
             <div className="relative aspect-[3/2] overflow-hidden group cursor-pointer">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1698678961439-413200c7ca9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxydW5uaW5nJTIwYXRobGV0ZSUyMHN0YWRpdW18ZW58MXx8fHwxNzY1MTI3ODYwfDA&ixlib=rb-4.1.0&q=80&w=1080"
+                src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1080&q=80"
                 alt="Giày Chạy Bộ Chuyên Nghiệp"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
