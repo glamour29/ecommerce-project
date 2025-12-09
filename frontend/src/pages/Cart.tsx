@@ -51,10 +51,14 @@ export const Cart: React.FC<CartProps> = ({ onNavigateHome, onCheckout }) => {
   return (
     <div className="min-h-screen bg-white py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Giỏ Hàng</h1>
-        <p className="text-gray-600 mb-8">
-          {itemCount} {itemCount === 1 ? 'sản phẩm' : 'sản phẩm'}
-        </p>
+        <div className="flex items-end justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Giỏ Hàng</h1>
+            <p className="text-gray-600">
+              {itemCount} {itemCount === 1 ? 'sản phẩm' : 'sản phẩm'}
+            </p>
+          </div>
+        </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}

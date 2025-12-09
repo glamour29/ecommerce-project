@@ -65,13 +65,15 @@ export const Favorites: React.FC<FavoritesProps> = ({ onNavigateHome }) => {
     <div className="min-h-screen bg-white py-12 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Yêu Thích
-          </h1>
-          <p className="text-gray-600">
-            {itemCount} {itemCount === 1 ? 'sản phẩm' : 'sản phẩm'}
-          </p>
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Yêu Thích
+            </h1>
+            <p className="text-gray-600">
+              {itemCount} {itemCount === 1 ? 'sản phẩm' : 'sản phẩm'}
+            </p>
+          </div>
         </div>
 
         {/* Products Grid */}

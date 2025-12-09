@@ -11,6 +11,7 @@ import { AuthFlow } from './pages/auth/AuthFlow';
 import { Cart } from './pages/Cart';
 import { Favorites } from './pages/Favorites';
 import { UserProvider } from './contexts/UserContext';
+import { useCartStore } from './store/cartStore';
 import { projectId, publicAnonKey } from './utils/supabase/info';
 
 const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-44763aa1`;
@@ -266,7 +267,9 @@ export default function App() {
     setCataloguePage(1);
   }, [searchQuery, filters, sortOption]);
 
-  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  // Use Zustand cart store instead of local state
+  const { getItemCount } = useCartStore();
+  const cartItemCount = getItemCount();
 
   if (loading) {
     return (
