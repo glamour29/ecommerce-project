@@ -8,6 +8,7 @@ import { SortDropdown, type SortOption } from './components/SortDropdown';
 import { Pagination } from './components/Pagination';
 import { Footer } from './components/Footer';
 import { AuthFlow } from './pages/auth/AuthFlow';
+import { UserProvider } from './contexts/UserContext';
 import { projectId, publicAnonKey } from './utils/supabase/info';
 
 const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-44763aa1`;

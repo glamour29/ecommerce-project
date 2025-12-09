@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { Search, ShoppingCart, Heart, Menu, X, User, MapPin, Zap, Sparkles, Moon, Sun } from 'lucide-react';
+import { AccountMenu } from './AccountMenu';
 
 interface HeaderProps {
   cartCount: number;
@@ -112,13 +113,7 @@ const UtilityBar = memo(function UtilityBar({
             <span className="text-gray-400 dark:text-gray-500">•</span>
             <button className="px-2.5 py-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors">Tham Gia</button>
             <span className="text-gray-400 dark:text-gray-500">•</span>
-            <button 
-              onClick={onNavigateAuth}
-              className="px-2.5 py-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors flex items-center space-x-1"
-            >
-              <User className="w-3 h-3" />
-              <span>Đăng Nhập</span>
-            </button>
+            <AccountMenu onNavigateAuth={onNavigateAuth} />
             <span className="text-gray-400 dark:text-gray-500">•</span>
             <button className="px-2.5 py-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors" onClick={onToggleDarkMode}>
               {isDark ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}

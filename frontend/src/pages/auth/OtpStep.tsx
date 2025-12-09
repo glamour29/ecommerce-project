@@ -4,9 +4,10 @@ interface OtpStepProps {
   email: string;
   onBack: () => void;
   onSignInSuccess: () => void;
+  onGoHome?: () => void;
 }
 
-export const OtpStep = ({ email, onBack, onSignInSuccess }: OtpStepProps) => {
+export const OtpStep = ({ email, onBack, onSignInSuccess, onGoHome }: OtpStepProps) => {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -73,9 +74,12 @@ export const OtpStep = ({ email, onBack, onSignInSuccess }: OtpStepProps) => {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-12">
-          <h1 className="text-2xl font-bold text-black">
+          <button 
+            onClick={onGoHome}
+            className="text-2xl font-bold text-black hover:text-gray-700 transition-colors"
+          >
             GayHub
-          </h1>
+          </button>
         </div>
 
         {/* Title */}

@@ -4,10 +4,11 @@ import { RefreshCw, Eye, EyeOff, ChevronDown } from 'lucide-react';
 interface SignupStepProps {
   email: string;
   onBack: () => void;
-  onSignupSuccess: () => void;
+  onSignupSuccess: (firstName: string, lastName: string) => void;
+  onGoHome?: () => void;
 }
 
-export const SignupStep = ({ email, onBack, onSignupSuccess }: SignupStepProps) => {
+export const SignupStep = ({ email, onBack, onSignupSuccess, onGoHome }: SignupStepProps) => {
   const [code, setCode] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -63,7 +64,7 @@ export const SignupStep = ({ email, onBack, onSignupSuccess }: SignupStepProps) 
     try {
       // Mock API call - TODO: Thay bằng /auth/signup
       await new Promise(resolve => setTimeout(resolve, 1500));
-      onSignupSuccess();
+      onSignupSuccess(firstName, lastName);
     } catch (err) {
       setErrors({ general: 'Có lỗi xảy ra. Vui lòng thử lại.' });
     } finally {
@@ -76,9 +77,12 @@ export const SignupStep = ({ email, onBack, onSignupSuccess }: SignupStepProps) 
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-black">
+          <button 
+            onClick={onGoHome}
+            className="text-2xl font-bold text-black hover:text-gray-700 transition-colors"
+          >
             GayHub
-          </h1>
+          </button>
         </div>
 
         {/* Title */}

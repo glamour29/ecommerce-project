@@ -2,12 +2,21 @@ import React, { useState, useCallback } from 'react';
 import { EmailStep } from './EmailStep';
 import { SignupStep } from './SignupStep';
 import { OtpStep } from './OtpStep';
+import { useUser } from '../contexts/UserContext';
 
 type AuthStep = 'email' | 'signup' | 'otp' | 'success';
+
+interface SignupData {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
 
 export const AuthFlow = () => {
   const [currentStep, setCurrentStep] = useState<AuthStep>('email');
   const [email, setEmail] = useState('');
+  const [signupData, setSignupData] = useState<SignupData | null>(null);
+  const { login } = useUser();
 
   // Handler khi user nhập email và nhấn Continue
   // Chỉ sau khi check email xong mới chuyển step
@@ -28,13 +37,34 @@ export const AuthFlow = () => {
     setEmail('');
   }, []);
 
-  const handleSignupSuccess = useCallback(() => {
-    setCurrentStep('success');
+  const handleGoHome = useCallback(() => {
+    window.location.href = '/';
   }, []);
 
-  const handleSignInSuccess = useCallback(() => {
+  const handleSignupSuccess = useCallback((firstName: string, lastName: string) => {
+    // Save user data and login
+    const userData = {
+      id: `user-${Date.now()}`, // Mock ID
+      email,
+      firstName,
+      lastName,
+    };
+    login(userData);
+    setSignupData({ firstName, lastName, email });
     setCurrentStep('success');
-  }, []);
+  }, [email, login]);
+
+  const handleSignInSuccess = useCallback(() => {
+    // Mock user data for OTP login (in real app, get from API)
+    const userData = {
+      id: `user-${Date.now()}`,
+      email,
+      firstName: email.split('@')[0], // Use email prefix as name
+      lastName: 'User',
+    };
+    login(userData);
+    setCurrentStep('success');
+  }, [email, login]);
 
   const handleGoToHome = useCallback(() => {
     // Navigate to home page
@@ -55,11 +85,11 @@ export const AuthFlow = () => {
           </div>
           
           <h2 className="text-3xl font-normal mb-4 text-black">
-            Chào mừng đến với GayHub!
+            Chào mừng {signupData?.firstName || 'bạn'} đến với GayHub!
           </h2>
           
           <p className="text-base mb-8 text-gray-600">
-            Tài khoản của bạn đã được tạo thành công.
+            Tài khoản của bạn đã được {signupData ? 'tạo' : 'đăng nhập'} thành công.
             <br />
             Bắt đầu khám phá ngay!
           </p>
@@ -81,6 +111,7 @@ export const AuthFlow = () => {
       {currentStep === 'email' && (
         <EmailStep
           onContinue={handleEmailContinue}
+          onGoHome={handleGoHome}
         />
       )}
       
@@ -89,6 +120,7 @@ export const AuthFlow = () => {
           email={email}
           onBack={handleBackToEmail}
           onSignupSuccess={handleSignupSuccess}
+          onGoHome={handleGoHome}
         />
       )}
       
@@ -97,6 +129,7 @@ export const AuthFlow = () => {
           email={email}
           onBack={handleBackToEmail}
           onSignInSuccess={handleSignInSuccess}
+          onGoHome={handleGoHome}
         />
       )}
     </>

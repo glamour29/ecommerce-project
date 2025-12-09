@@ -2,9 +2,10 @@ import React, { useState, useCallback } from 'react';
 
 interface EmailStepProps {
   onContinue: (email: string, exists: boolean) => void;
+  onGoHome?: () => void;
 }
 
-export const EmailStep = ({ onContinue }: EmailStepProps) => {
+export const EmailStep = ({ onContinue, onGoHome }: EmailStepProps) => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -57,9 +58,12 @@ export const EmailStep = ({ onContinue }: EmailStepProps) => {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-12">
-          <h1 className="text-2xl font-bold text-black">
+          <button 
+            onClick={onGoHome}
+            className="text-2xl font-bold text-black hover:text-gray-700 transition-colors"
+          >
             GayHub
-          </h1>
+          </button>
         </div>
 
         {/* Title */}
