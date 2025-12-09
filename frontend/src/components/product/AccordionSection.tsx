@@ -35,3 +35,4 @@ export const AccordionSection = memo(({ title, children, defaultOpen = false }: 
 
 AccordionSection.displayName = 'AccordionSection';
 
+

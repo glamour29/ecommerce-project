@@ -36,51 +36,75 @@ const MOCK_PRODUCT = {
 };
 
 interface ProductDetailProps {
+  productId?: string | null;
+  products?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    originalPrice?: number;
+    rating: number;
+    category: string;
+    image: string;
+    description: string;
+  }>;
   onNavigateHome?: () => void;
 }
 
-export const ProductDetail: React.FC<ProductDetailProps> = ({ onNavigateHome }) => {
+export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, products = [], onNavigateHome }) => {
+  // Find product from list or use mock data
+  const productFromList = products.find(p => p.id === productId);
+  const product = productFromList || MOCK_PRODUCT;
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>(MOCK_PRODUCT.colors[0].name);
   const [quantity] = useState(1);
 
   const { addItem: addToCart } = useCartStore();
-  const { toggleItem: toggleFavorite, isFavorite } = useFavoriteStore();
+  const { addItem: addToFavorites, removeItem: removeFromFavorites, hasItem: isFavorite } = useFavoriteStore();
 
-  const isInFavorites = isFavorite(MOCK_PRODUCT.id);
-  const discount = MOCK_PRODUCT.originalPrice
-    ? Math.round(((MOCK_PRODUCT.originalPrice - MOCK_PRODUCT.price) / MOCK_PRODUCT.originalPrice) * 100)
+  const isInFavorites = isFavorite(product.id);
+  const discount = product.originalPrice
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
   const handleAddToBag = () => {
-    if (!selectedSize) {
+    if (!selectedSize && product.category === 'Giày') {
       alert('Vui lòng chọn size!');
       return;
     }
 
     addToCart({
-      id: `${MOCK_PRODUCT.id}-${selectedSize}-${selectedColor}`,
-      name: MOCK_PRODUCT.name,
-      price: MOCK_PRODUCT.price,
+      id: `${product.id}-${selectedSize || 'default'}-${selectedColor}`,
+      name: product.name,
+      price: product.price,
       image: MOCK_PRODUCT.images[0],
       quantity,
-      size: selectedSize,
+      size: selectedSize || undefined,
       color: selectedColor,
+      category: product.category,
+      rating: product.rating,
+      description: product.description,
+      stock: 100,
     });
 
     alert('Đã thêm vào giỏ hàng!');
   };
 
   const handleToggleFavorite = () => {
-    toggleFavorite({
-      id: MOCK_PRODUCT.id,
-      name: MOCK_PRODUCT.name,
-      price: MOCK_PRODUCT.price,
-      originalPrice: MOCK_PRODUCT.originalPrice,
-      image: MOCK_PRODUCT.images[0],
-      category: MOCK_PRODUCT.category,
-      rating: MOCK_PRODUCT.rating,
-    });
+    if (isInFavorites) {
+      removeFromFavorites(product.id);
+    } else {
+      addToFavorites({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        originalPrice: product.originalPrice,
+        image: MOCK_PRODUCT.images[0],
+        category: product.category,
+        rating: product.rating,
+        description: product.description,
+        stock: 100,
+      });
+    }
   };
 
   return (
@@ -107,20 +131,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ onNavigateHome }) 
               )}
               
               <h1 className="text-3xl font-bold text-gray-900 mb-3">
-                {MOCK_PRODUCT.name}
+                {product.name}
               </h1>
               
               <p className="text-base text-gray-600 mb-4">
-                {MOCK_PRODUCT.category}
+                {product.category}
               </p>
 
               <div className="flex items-baseline gap-3 mb-2">
                 <span className="text-2xl font-bold text-gray-900">
-                  {MOCK_PRODUCT.price.toLocaleString('vi-VN')}đ
+                  {product.price.toLocaleString('vi-VN')}đ
                 </span>
-                {MOCK_PRODUCT.originalPrice && (
+                {product.originalPrice && (
                   <span className="text-lg text-gray-500 line-through">
-                    {MOCK_PRODUCT.originalPrice.toLocaleString('vi-VN')}đ
+                    {product.originalPrice.toLocaleString('vi-VN')}đ
                   </span>
                 )}
               </div>
@@ -130,7 +154,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ onNavigateHome }) 
                 <div className="flex items-center gap-1">
                   <Star className="w-5 h-5 text-yellow-400 fill-current" />
                   <span className="text-sm font-semibold text-gray-900">
-                    {MOCK_PRODUCT.rating}
+                    {product.rating}
                   </span>
                 </div>
                 <span className="text-sm text-gray-500">
@@ -213,7 +237,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ onNavigateHome }) 
             <div className="border-t border-gray-200">
               <AccordionSection title="Xem Thông Tin Sản Phẩm" defaultOpen>
                 <div className="space-y-3">
-                  <p>{MOCK_PRODUCT.description}</p>
+                  <p>{product.description}</p>
                   <ul className="list-disc list-inside space-y-2">
                     <li>Màu: {selectedColor}</li>
                     <li>Mã sản phẩm: {MOCK_PRODUCT.styleCode}</li>
@@ -255,14 +279,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ onNavigateHome }) 
                         <Star
                           key={star}
                           className={`w-5 h-5 ${
-                            star <= Math.floor(MOCK_PRODUCT.rating)
+                            star <= Math.floor(product.rating)
                               ? 'text-yellow-400 fill-current'
                               : 'text-gray-300'
                           }`}
                         />
                       ))}
                     </div>
-                    <span className="text-lg font-bold">{MOCK_PRODUCT.rating}</span>
+                    <span className="text-lg font-bold">{product.rating}</span>
                     <span className="text-gray-500">/ 5.0</span>
                   </div>
                   <p className="text-gray-600">
@@ -276,7 +300,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ onNavigateHome }) 
       </div>
 
       {/* Recommended Products Section */}
-      <RecommendedProducts currentProductId={MOCK_PRODUCT.id} />
+      <RecommendedProducts currentProductId={product.id} />
     </div>
   );
 };
@@ -349,4 +373,5 @@ const RecommendedProducts = ({ currentProductId }: { currentProductId: string })
     </section>
   );
 };
+
 

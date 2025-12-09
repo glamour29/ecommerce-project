@@ -23,6 +23,7 @@ const USER_ID = 'demo-user-001';
 export default function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'catalogue' | 'auth' | 'cart' | 'favorites' | 'product'>('home');
   const [products, setProducts] = useState<Product[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [cart, setCart] = useState<Array<{ productId: string; quantity: number }>>([]);
   const [loading, setLoading] = useState(true);
@@ -183,7 +184,8 @@ export default function App() {
     setCurrentPage('favorites');
   }, []);
 
-  const handleNavigateProduct = useCallback(() => {
+  const handleNavigateProduct = useCallback((productId: string) => {
+    setSelectedProductId(productId);
     setCurrentPage('product');
   }, []);
 
@@ -346,7 +348,11 @@ export default function App() {
           onNavigateCart={handleNavigateCart}
           onNavigateFavorites={handleNavigateFavorites}
         />
-        <ProductDetail onNavigateHome={handleNavigateHome} />
+        <ProductDetail 
+          productId={selectedProductId}
+          products={products}
+          onNavigateHome={handleNavigateHome} 
+        />
         <Footer />
       </div>
     );
@@ -443,6 +449,7 @@ export default function App() {
                       isWishlisted={wishlist.includes(product.id)}
                       onAddToCart={handleAddToCart}
                       onToggleWishlist={handleToggleWishlist}
+                      onViewProduct={handleNavigateProduct}
                     />
                   ))}
                 </div>

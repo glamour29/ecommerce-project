@@ -116,3 +116,4 @@ export const CartItem = memo(({ item, onUpdateQuantity, onRemove }: CartItemProp
 
 CartItem.displayName = 'CartItem';
 
+

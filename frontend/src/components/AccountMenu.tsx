@@ -106,3 +106,4 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({ onNavigateAuth }) => {
   );
 };
 
+

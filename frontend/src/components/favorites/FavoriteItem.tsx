@@ -81,3 +81,4 @@ export const FavoriteItem = memo(({ item, onAddToCart, onRemove }: FavoriteItemP
 
 FavoriteItem.displayName = 'FavoriteItem';
 
+

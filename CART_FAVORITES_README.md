@@ -149,3 +149,4 @@ All features implemented and tested. No linter errors.
 **Branch:** `feature/frontend/cart-favorites-duy`
 **Status:** ✅ Complete, ready for PR
 
+

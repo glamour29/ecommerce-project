@@ -20,9 +20,10 @@ interface ProductCardProps {
   isWishlisted: boolean;
   onAddToCart: (productId: string) => void;
   onToggleWishlist: (productId: string) => void;
+  onViewProduct?: (productId: string) => void;
 }
 
-export const ProductCard = memo(function ProductCard({ product, isWishlisted, onAddToCart, onToggleWishlist }: ProductCardProps) {
+export const ProductCard = memo(function ProductCard({ product, isWishlisted, onAddToCart, onToggleWishlist, onViewProduct }: ProductCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -42,6 +43,12 @@ export const ProductCard = memo(function ProductCard({ product, isWishlisted, on
   const handleToggleWishlist = useCallback(() => {
     onToggleWishlist(product.id);
   }, [onToggleWishlist, product.id]);
+
+  const handleViewProduct = useCallback(() => {
+    if (onViewProduct) {
+      onViewProduct(product.id);
+    }
+  }, [onViewProduct, product.id]);
 
   const handleImageLoad = useCallback(() => {
     setImageLoaded(true);
@@ -81,8 +88,11 @@ export const ProductCard = memo(function ProductCard({ product, isWishlisted, on
         />
       </button>
 
-      {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 dark:bg-gray-700">
+      {/* Image - Clickable */}
+      <div 
+        onClick={handleViewProduct}
+        className="relative aspect-[4/3] overflow-hidden bg-gray-100 dark:bg-gray-700 cursor-pointer"
+      >
         {!imageLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
             <div className="w-8 h-8 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
@@ -109,8 +119,11 @@ export const ProductCard = memo(function ProductCard({ product, isWishlisted, on
         )}
       </div>
 
-      {/* Content */}
-      <div className="p-5">
+      {/* Content - Clickable */}
+      <div 
+        onClick={handleViewProduct}
+        className="p-5 cursor-pointer"
+      >
         {/* Category */}
         <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2 font-medium">
           {product.category}
