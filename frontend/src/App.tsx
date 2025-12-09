@@ -10,6 +10,7 @@ import { Footer } from './components/Footer';
 import { AuthFlow } from './pages/auth/AuthFlow';
 import { Cart } from './pages/Cart';
 import { Favorites } from './pages/Favorites';
+import { ProductDetail } from './pages/ProductDetail';
 import { UserProvider } from './contexts/UserContext';
 import { useCartStore } from './store/cartStore';
 import { projectId, publicAnonKey } from './utils/supabase/info';
@@ -20,7 +21,7 @@ const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-
 const USER_ID = 'demo-user-001';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'catalogue' | 'auth' | 'cart' | 'favorites'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'catalogue' | 'auth' | 'cart' | 'favorites' | 'product'>('home');
   const [products, setProducts] = useState<Product[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [cart, setCart] = useState<Array<{ productId: string; quantity: number }>>([]);
@@ -182,6 +183,10 @@ export default function App() {
     setCurrentPage('favorites');
   }, []);
 
+  const handleNavigateProduct = useCallback(() => {
+    setCurrentPage('product');
+  }, []);
+
   const handleShopNow = useCallback(() => {
     setCurrentPage('catalogue');
   }, []);
@@ -323,6 +328,25 @@ export default function App() {
           onNavigateFavorites={handleNavigateFavorites}
         />
         <Favorites onNavigateHome={handleNavigateHome} />
+        <Footer />
+      </div>
+    );
+  }
+
+  // Show Product Detail Page
+  if (currentPage === 'product') {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        <Header 
+          cartCount={cartItemCount}
+          onSearch={setSearchQuery}
+          searchQuery={searchQuery}
+          onNavigateHome={handleNavigateHome}
+          onNavigateAuth={handleNavigateAuth}
+          onNavigateCart={handleNavigateCart}
+          onNavigateFavorites={handleNavigateFavorites}
+        />
+        <ProductDetail onNavigateHome={handleNavigateHome} />
         <Footer />
       </div>
     );
