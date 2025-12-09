@@ -5,6 +5,7 @@ import { HomePage } from './components/HomePage';
 import { ProductCard, type Product } from './components/ProductCard';
 import { FilterPanel, type FilterState } from './components/FilterPanel';
 import { SortDropdown, type SortOption } from './components/SortDropdown';
+import { Pagination } from './components/Pagination';
 import { Footer } from './components/Footer';
 import { projectId, publicAnonKey } from './utils/supabase/info';
 
@@ -27,6 +28,8 @@ export default function App() {
     minRating: 0
   });
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [cataloguePage, setCataloguePage] = useState(1);
+  const ITEMS_PER_PAGE = 12;
 
   // Fetch products on mount
   useEffect(() => {
@@ -234,6 +237,19 @@ export default function App() {
     return result;
   }, [products, searchQuery, filters, sortOption]);
 
+  // Pagination
+  const totalPages = Math.ceil(filteredAndSortedProducts.length / ITEMS_PER_PAGE);
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (cataloguePage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredAndSortedProducts.slice(startIndex, endIndex);
+  }, [filteredAndSortedProducts, cataloguePage]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCataloguePage(1);
+  }, [searchQuery, filters, sortOption]);
+
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   if (loading) {
@@ -323,17 +339,28 @@ export default function App() {
                 <p className="text-gray-600 dark:text-gray-400">Hãy thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredAndSortedProducts.map(product => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    isWishlisted={wishlist.includes(product.id)}
-                    onAddToCart={handleAddToCart}
-                    onToggleWishlist={handleToggleWishlist}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {paginatedProducts.map(product => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      isWishlisted={wishlist.includes(product.id)}
+                      onAddToCart={handleAddToCart}
+                      onToggleWishlist={handleToggleWishlist}
+                    />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={cataloguePage}
+                  totalPages={totalPages}
+                  onPageChange={setCataloguePage}
+                  totalItems={filteredAndSortedProducts.length}
+                  itemsPerPage={ITEMS_PER_PAGE}
+                />
+              </>
             )}
           </div>
         </div>
