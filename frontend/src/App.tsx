@@ -212,6 +212,7 @@ export default function App() {
     console.log('🔍 FILTERING PRODUCTS:', {
       totalProducts: products.length,
       filters: filters,
+      categoriesSelected: filters.categories,
       searchQuery: searchQuery
     });
     
@@ -230,6 +231,8 @@ export default function App() {
 
     // Apply category filter
     if (filters.categories.length > 0) {
+      console.log('🏷️ Category filter active! Selected:', filters.categories);
+      console.log('🏷️ Available categories in products:', [...new Set(products.map(p => p.category))]);
       result = result.filter(product => 
         filters.categories.includes(product.category)
       );
