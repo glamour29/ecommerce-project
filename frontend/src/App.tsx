@@ -7,6 +7,7 @@ import { FilterPanel, type FilterState } from './components/FilterPanel';
 import { SortDropdown, type SortOption } from './components/SortDropdown';
 import { Pagination } from './components/Pagination';
 import { Footer } from './components/Footer';
+import { AuthFlow } from './pages/auth/AuthFlow';
 import { projectId, publicAnonKey } from './utils/supabase/info';
 
 const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-44763aa1`;
@@ -15,7 +16,7 @@ const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-
 const USER_ID = 'demo-user-001';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'catalogue'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'catalogue' | 'auth'>('home');
   const [products, setProducts] = useState<Product[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [cart, setCart] = useState<Array<{ productId: string; quantity: number }>>([]);
@@ -165,6 +166,10 @@ export default function App() {
     setCurrentPage('home');
   }, []);
 
+  const handleNavigateAuth = useCallback(() => {
+    setCurrentPage('auth');
+  }, []);
+
   const handleShopNow = useCallback(() => {
     setCurrentPage('catalogue');
   }, []);
@@ -263,6 +268,11 @@ export default function App() {
     );
   }
 
+  // Show Auth Page
+  if (currentPage === 'auth') {
+    return <AuthFlow />;
+  }
+
   // Show HomePage
   if (currentPage === 'home') {
     return (
@@ -272,6 +282,7 @@ export default function App() {
           onSearch={setSearchQuery}
           searchQuery={searchQuery}
           onNavigateHome={handleNavigateHome}
+          onNavigateAuth={handleNavigateAuth}
         />
         <HomePage 
           onShopNow={handleShopNow} 
@@ -290,6 +301,7 @@ export default function App() {
         onSearch={setSearchQuery}
         searchQuery={searchQuery}
         onNavigateHome={handleNavigateHome}
+        onNavigateAuth={handleNavigateAuth}
       />
 
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-8">

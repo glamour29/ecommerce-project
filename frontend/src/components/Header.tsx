@@ -6,6 +6,7 @@ interface HeaderProps {
   onSearch: (query: string) => void;
   searchQuery: string;
   onNavigateHome?: () => void;
+  onNavigateAuth?: () => void;
 }
 
 type MenuKey = 'featured' | 'men' | 'women' | 'kids' | 'sale';
@@ -65,11 +66,13 @@ function useScrollAnimation(utilityBarRef: React.RefObject<HTMLDivElement>) {
 const UtilityBar = memo(function UtilityBar({ 
   utilityBarRef,
   isDark, 
-  onToggleDarkMode 
+  onToggleDarkMode,
+  onNavigateAuth
 }: { 
   utilityBarRef: React.RefObject<HTMLDivElement>;
   isDark: boolean; 
   onToggleDarkMode: () => void;
+  onNavigateAuth?: () => void;
 }) {
   return (
     <div 
@@ -109,7 +112,10 @@ const UtilityBar = memo(function UtilityBar({
             <span className="text-gray-400 dark:text-gray-500">•</span>
             <button className="px-2.5 py-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors">Tham Gia</button>
             <span className="text-gray-400 dark:text-gray-500">•</span>
-            <button className="px-2.5 py-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors flex items-center space-x-1">
+            <button 
+              onClick={onNavigateAuth}
+              className="px-2.5 py-1 hover:bg-black/5 dark:hover:bg-white/10 rounded-md transition-colors flex items-center space-x-1"
+            >
               <User className="w-3 h-3" />
               <span>Đăng Nhập</span>
             </button>
@@ -191,11 +197,12 @@ function arePropsEqual(prevProps: HeaderProps, nextProps: HeaderProps) {
     prevProps.cartCount === nextProps.cartCount &&
     prevProps.searchQuery === nextProps.searchQuery &&
     prevProps.onSearch === nextProps.onSearch &&
-    prevProps.onNavigateHome === nextProps.onNavigateHome
+    prevProps.onNavigateHome === nextProps.onNavigateHome &&
+    prevProps.onNavigateAuth === nextProps.onNavigateAuth
   );
 }
 
-export const Header = memo(function Header({ cartCount, onSearch, searchQuery, onNavigateHome }: HeaderProps) {
+export const Header = memo(function Header({ cartCount, onSearch, searchQuery, onNavigateHome, onNavigateAuth }: HeaderProps) {
   const [activeMenu, setActiveMenu] = useState<MenuKey | null>(null);
   const [isDark, setIsDark] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -269,6 +276,7 @@ export const Header = memo(function Header({ cartCount, onSearch, searchQuery, o
         utilityBarRef={utilityBarRef}
         isDark={isDark}
         onToggleDarkMode={toggleDarkMode}
+        onNavigateAuth={onNavigateAuth}
       />
 
       {/* Main Header - KHÔNG có blur riêng */}
